@@ -114,7 +114,10 @@ class _NotificationItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color:notification.isRead ? Colors.white : AppColors.primary.withAlpha(50),
+          color:
+              notification.isRead
+                  ? Colors.white
+                  : AppColors.primary.withAlpha(50),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade200),
         ),

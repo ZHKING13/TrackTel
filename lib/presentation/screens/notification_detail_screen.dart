@@ -8,10 +8,7 @@ import '../viewmodels/notifications_viewmodel.dart';
 class NotificationDetailScreen extends ConsumerStatefulWidget {
   final NotificationEntity notification;
 
-  const NotificationDetailScreen({
-    super.key,
-    required this.notification,
-  });
+  const NotificationDetailScreen({super.key, required this.notification});
 
   @override
   ConsumerState<NotificationDetailScreen> createState() =>
@@ -106,9 +103,7 @@ class _NotificationDetailScreenState
                   ),
                   const SizedBox(height: 16),
 
-                  _MessageBubble(
-                    message: _buildFullMessage(),
-                  ),
+                  _MessageBubble(message: _buildFullMessage()),
                 ],
               ),
             ),
@@ -141,7 +136,8 @@ class _NotificationDetailScreenState
 
   String _formatFullDateTime(DateTime dateTime) {
     final now = DateTime.now();
-    final isToday = dateTime.year == now.year &&
+    final isToday =
+        dateTime.year == now.year &&
         dateTime.month == now.month &&
         dateTime.day == now.day;
 
@@ -178,11 +174,7 @@ class _NotificationDetailScreenState
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.grey.shade300),
               ),
-              child: Icon(
-                Icons.add,
-                size: 20,
-                color: Colors.grey.shade600,
-              ),
+              child: Icon(Icons.add, size: 20, color: Colors.grey.shade600),
             ),
             const SizedBox(width: 12),
 
@@ -209,11 +201,7 @@ class _NotificationDetailScreenState
             ),
             const SizedBox(width: 12),
 
-            Icon(
-              Icons.mic_none,
-              size: 24,
-              color: Colors.grey.shade600,
-            ),
+            Icon(Icons.mic_none, size: 24, color: Colors.grey.shade600),
           ],
         ),
       ),
