@@ -58,6 +58,27 @@ dev_dependencies:
     # rules and activating additional ones.
     flutter_lints: ^5.0.0
 
+    # Générateur d'icônes d'application
+    flutter_launcher_icons: ^0.14.3
+
+# Configuration des icônes de l'application
+flutter_launcher_icons:
+    android: true
+    ios: true
+    remove_alpha_ios: true
+    web:
+        generate: true
+        image_path: "assets/Icone/Icone 500/500.png"
+    windows:
+        generate: true
+        image_path: "assets/Icone/Icone 500/500.png"
+    macos:
+        generate: true
+        image_path: "assets/Icone/Icone 1024/1024.png"
+    image_path: "assets/Icone/Icone 1024/1024.png"
+    adaptive_icon_background: "#FF6B35"
+    adaptive_icon_foreground: "assets/Icone/Icone 1024/1024.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
