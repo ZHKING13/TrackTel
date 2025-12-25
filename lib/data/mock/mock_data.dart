@@ -59,7 +59,6 @@ class MockData {
         .toList();
   }
 
-  /// Met à jour une commande existante par sa référence
   static void updateOrder(
     String reference, {
     int? progress,
@@ -75,7 +74,6 @@ class MockData {
     }
   }
 
-  // ========== WORKFLOW STEPS ==========
   static List<WorkflowStepModel> getFibreWorkflowSteps({int currentStep = 1}) {
     return [
       WorkflowStepModel(
