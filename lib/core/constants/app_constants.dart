@@ -1,4 +1,3 @@
-/// Application constants
 class AppConstants {
   AppConstants._();
 
@@ -17,10 +16,7 @@ class AppConstants {
   static const String themeKey = 'theme_mode';
   static const String languageKey = 'language';
 
-  // Pagination
-  static const int defaultPageSize = 20;
 
-  // Animation Durations
   static const Duration shortAnimation = Duration(milliseconds: 200);
   static const Duration mediumAnimation = Duration(milliseconds: 350);
   static const Duration longAnimation = Duration(milliseconds: 500);

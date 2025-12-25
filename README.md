@@ -145,7 +145,7 @@ lib/
 
 ```yaml
 dependencies:
-    flutter_sdk: ^3.7.2
+    flutter_sdk: ^3.29.3
 
     # Gestion d'état
     flutter_riverpod: ^2.5.1
@@ -184,9 +184,9 @@ dev_dependencies:
 
 ### Prérequis
 
--   Flutter SDK 3.7.2 ou supérieur
+-   Flutter SDK 3.29.3 ou supérieur
 -   Dart SDK 3.7.2 ou supérieur
--   Android Studio / Xcode (selon la plateforme cible)
+-   Android Studio / Xcode/Vs code (selon votre preference)
 -   CLE API Google Maps
 
 ### Configuration

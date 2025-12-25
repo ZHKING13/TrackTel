@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-/// Application theme configuration using Roboto font
 class AppTheme {
   AppTheme._();
 
-  // Font Family
   static const String fontFamily = 'Roboto';
 
-  /// Light Theme
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -197,7 +194,6 @@ class AppTheme {
     );
   }
 
-  /// Dark Theme
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,

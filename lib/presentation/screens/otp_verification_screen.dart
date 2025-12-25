@@ -123,19 +123,21 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     }
   }
 
-  void _resendOtp() {
-    ref.read(authProvider.notifier).generateOtp();
+  Future<void> _resendOtp() async {
+    await ref.read(authProvider.notifier).generateOtp();
     _startTimer();
     for (var controller in _controllers) {
       controller.clear();
     }
     _focusNodes[0].requestFocus();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Nouveau code envoyé'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Nouveau code envoyé par notification'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   @override
@@ -206,7 +208,6 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
             ),
           ),
 
-          // Bottom Sheet
           Positioned(
             top: imageHeight - 20,
             left: 0,
@@ -225,7 +226,6 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title
                     Text(
                       'Vérification OTP',
                       style: Theme.of(
@@ -237,7 +237,6 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                     ),
                     const SizedBox(height: 8),
 
-                    // Subtitle with masked phone
                     Text(
                       'Un code a été envoyé au ${_maskPhoneNumber(authState.phoneNumber)}',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -246,7 +245,6 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                     ),
                     const SizedBox(height: 32),
 
-                    // OTP Input Fields
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(4, (index) {

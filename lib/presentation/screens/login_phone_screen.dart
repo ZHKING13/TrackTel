@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
 
-/// Login screen with phone number input
 class LoginPhoneScreen extends ConsumerStatefulWidget {
   const LoginPhoneScreen({super.key});
 
@@ -35,12 +34,12 @@ class _LoginPhoneScreenState extends ConsumerState<LoginPhoneScreen> {
     ref.read(authProvider.notifier).setPhoneNumber(_phoneController.text);
   }
 
-  void _onNextPressed() {
-    // Generate OTP
-    ref.read(authProvider.notifier).generateOtp();
+  Future<void> _onNextPressed() async {
+    await ref.read(authProvider.notifier).generateOtp();
 
-    // Navigate to OTP verification screen
-    context.push('/otp-verification');
+    if (mounted) {
+      context.push('/otp-verification');
+    }
   }
 
   @override
@@ -53,7 +52,6 @@ class _LoginPhoneScreenState extends ConsumerState<LoginPhoneScreen> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          // Hero Image - Top Section
           Positioned(
             top: 0,
             left: 0,
@@ -79,7 +77,6 @@ class _LoginPhoneScreenState extends ConsumerState<LoginPhoneScreen> {
                     ],
                   ),
                 ),
-                // Fallback content when no image
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -179,7 +176,6 @@ class _LoginPhoneScreenState extends ConsumerState<LoginPhoneScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Next Button
                     SizedBox(
                       width: double.infinity,
                       height: 45,

@@ -19,7 +19,7 @@ if (localPropertiesFile.exists()) {
 android {
     namespace = "com.example.tracktel"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         // Active le desugaring pour flutter_local_notifications

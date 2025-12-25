@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/usecases/send_otp_notification_usecase.dart';
+import '../../core/services/notification_service.dart';
 
 class AuthKeys {
   static const String isLoggedIn = 'is_logged_in';
@@ -50,7 +52,9 @@ class AuthState {
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(const AuthState()) {
+  final SendOtpNotificationUseCase _sendOtpNotificationUseCase;
+
+  AuthNotifier(this._sendOtpNotificationUseCase) : super(const AuthState()) {
     checkSession();
   }
 
@@ -108,7 +112,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(phoneNumber: phone, error: null);
   }
 
-  String generateOtp() {
+  Future<void> generateOtp() async {
     final random = Random();
     final otp = (1000 + random.nextInt(9000)).toString();
     state = state.copyWith(generatedOtp: otp);
@@ -118,7 +122,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
     debugPrint(' Numéro: ${state.phoneNumber}');
     debugPrint('═══════════════════════════════════');
 
-    return otp;
+    try {
+      await _sendOtpNotificationUseCase(
+        phoneNumber: state.phoneNumber,
+        otp: otp,
+      );
+      debugPrint('Notification OTP envoyée');
+    } catch (e) {
+      debugPrint(' Erreur envoi notification OTP: $e');
+    }
   }
 
   Future<bool> verifyOtp(String enteredOtp) async {
@@ -152,7 +164,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier();
+  final notificationService = ref.watch(notificationServiceProvider);
+  final sendOtpUseCase = SendOtpNotificationUseCase(notificationService);
+  return AuthNotifier(sendOtpUseCase);
 });
 
 final isPhoneValidProvider = Provider<bool>((ref) {

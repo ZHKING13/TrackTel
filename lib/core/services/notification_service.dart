@@ -55,6 +55,21 @@ class NotificationService {
     );
   }
 
+  Future<void> showOtpNotification({
+    required String phoneNumber,
+    required String otp,
+  }) async {
+    if (!_isInitialized) await initialize();
+
+    await _notificationsPlugin.show(
+      DateTime.now().millisecondsSinceEpoch.remainder(100000),
+      'Code de vérification TrackTel',
+      'Votre code OTP est : $otp\nValable 1 minutes.',
+      _getOtpNotificationDetails(),
+      payload: 'otp:$otp',
+    );
+  }
+
   NotificationDetails _getNotificationDetails() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
@@ -70,6 +85,30 @@ class NotificationService {
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
+      ),
+    );
+  }
+
+  NotificationDetails _getOtpNotificationDetails() {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'tracktel_otp_channel',
+        'Codes de vérification',
+        channelDescription:
+            'Notifications contenant les codes OTP pour la connexion',
+        importance: Importance.max,
+        priority: Priority.max,
+        showWhen: true,
+        icon: '@mipmap/ic_launcher',
+        enableVibration: true,
+        playSound: true,
+        category: AndroidNotificationCategory.message,
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+        interruptionLevel: InterruptionLevel.timeSensitive,
       ),
     );
   }
