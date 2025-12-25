@@ -60,7 +60,6 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                           return _NotificationItem(
                             notification: notification,
                             onTap: () {
-                              // Naviguer vers le détail
                               context.push(
                                 AppRouter.notificationDetail,
                                 extra: notification,

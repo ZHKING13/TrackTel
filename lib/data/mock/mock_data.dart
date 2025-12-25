@@ -1,57 +1,10 @@
-import '../models/user_model.dart';
 import '../models/order_model.dart';
 import '../models/workflow_step_model.dart';
 
 class MockData {
   MockData._();
 
-  // ========== USERS ==========
-  static final List<UserModel> users = [
-    UserModel(
-      id: '1',
-      name: 'Jean Dupont',
-      email: 'jean.dupont@example.com',
-      avatarUrl: 'https://i.pravatar.cc/150?u=1',
-      createdAt: DateTime(2024, 1, 15),
-    ),
-    UserModel(
-      id: '2',
-      name: 'Marie Martin',
-      email: 'marie.martin@example.com',
-      avatarUrl: 'https://i.pravatar.cc/150?u=2',
-      createdAt: DateTime(2024, 2, 20),
-    ),
-    UserModel(
-      id: '3',
-      name: 'Pierre Bernard',
-      email: 'pierre.bernard@example.com',
-      avatarUrl: 'https://i.pravatar.cc/150?u=3',
-      createdAt: DateTime(2024, 3, 10),
-    ),
-    UserModel(
-      id: '4',
-      name: 'Sophie Petit',
-      email: 'sophie.petit@example.com',
-      createdAt: DateTime(2024, 4, 5),
-    ),
-    UserModel(
-      id: '5',
-      name: 'Lucas Roux',
-      email: 'lucas.roux@example.com',
-      avatarUrl: 'https://i.pravatar.cc/150?u=5',
-      createdAt: DateTime(2024, 5, 12),
-    ),
-  ];
 
-  static UserModel? getUserById(String id) {
-    try {
-      return users.firstWhere((user) => user.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // ========== ORDERS ==========
   static final List<OrderModel> orders = [
     OrderModel(
       reference: 'FIB-20-0012',

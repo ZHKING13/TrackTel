@@ -1,4 +1,3 @@
-export 'users_viewmodel.dart';
 export 'theme_viewmodel.dart';
 export 'auth_viewmodel.dart';
 export 'navigation_viewmodel.dart';

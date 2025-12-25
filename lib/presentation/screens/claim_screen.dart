@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../domain/entities/claim_entity.dart';
 import '../viewmodels/claim_viewmodel.dart';
@@ -30,17 +31,102 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
     final success = await notifier.submitClaim();
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Réclamation envoyée avec succès'),
-          backgroundColor: Colors.green.shade600,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-      context.pop();
+      _showSuccessBottomSheet();
     }
   }
 
+  void _showSuccessBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder:
+          (bottomSheetContext) => Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Succès',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(bottomSheetContext).pop();
+                        context.pop();
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 24,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Votre réclamation a été envoyée avec succès.',
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF4CD964),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 48),
+                ),
+                const SizedBox(height: 32),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(bottomSheetContext).pop();
+                      context.go(AppRouter.claimsHistory);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.grey.shade300),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Voir la réclamation',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(claimFormProvider(widget.orderReference));
@@ -49,24 +135,36 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade300),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(40),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.arrow_back_ios_new,
-              size: 16,
-              color: Colors.black87,
+            child: IconButton(
+              onPressed: () => context.pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: AppColors.textPrimary,
+                size: 16,
+              ),
+              padding: EdgeInsets.zero,
             ),
           ),
-          onPressed: () => context.pop(),
         ),
         title: const Text(
           'Faire une réclamation',
@@ -207,11 +305,11 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
               ),
             ],
 
-            const Spacer(),
+            const SizedBox(height: 10,),
 
             // Bouton Terminer
             SizedBox(
-              height: 50,
+              height: 45,
               child: ElevatedButton(
                 onPressed:
                     formState.isSubmitting || !formState.isValid
@@ -222,7 +320,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
                   disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   elevation: 0,
                 ),

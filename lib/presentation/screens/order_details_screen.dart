@@ -22,7 +22,6 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialiser le workflow au démarrage
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(workflowProvider.notifier)
@@ -39,13 +38,15 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
     final completedStepIndex = workflowStateBefore.currentStepIndex;
     final completionTime = 'Aujourd\'hui ${TimeOfDay.now().format(context)}';
 
-    // Avancer à l'étape suivante
     final completedStepTitle = await workflowNotifier.advanceToNextStep(
       completionTime,
     );
 
-    // Mettre à jour la progression de la commande
     final workflowState = ref.read(workflowProvider);
+
+    // Obtenir le titre du prochain step (pas celui qui vient d'être validé)
+    final nextStepTitle = workflowState.currentStepTitle;
+
     await ref
         .read(ordersProvider.notifier)
         .updateOrderProgress(
@@ -57,28 +58,29 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                   : OrderStatus.inProgress,
         );
 
-    // Envoyer la notification (système + in-app)
-    _sendStepNotification(completedStepTitle ?? '', completedStepIndex);
+    _sendStepNotification(
+      completedStepTitle ?? '',
+      completedStepIndex,
+      nextStepTitle,
+    );
   }
 
   void _sendStepNotification(
     String completedStepTitle,
     int completedStepIndex,
+    String? nextStepTitle,
   ) {
     final notificationService = ref.read(notificationServiceProvider);
     final workflowState = ref.read(workflowProvider);
 
-    // Notification système (locale)
     if (workflowState.isCompleted) {
+    } else {
       notificationService.showNotification(
-        title: '🎉 Installation terminée !',
+        title: nextStepTitle ?? completedStepTitle,
         body: '',
       );
-    } else {
-      notificationService.showNotification(title: completedStepTitle, body: '');
     }
 
-    // Notification in-app
     ref
         .read(notificationsProvider.notifier)
         .addWorkflowStepNotification(
@@ -86,6 +88,15 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
           stepTitle: completedStepTitle,
           orderReference: widget.order.reference,
         );
+  }
+
+  bool _isTechnicianOnRoute(workflowState) {
+    if (workflowState.currentStepIndex >= 0 &&
+        workflowState.currentStepIndex < workflowState.steps.length) {
+      final currentStep = workflowState.steps[workflowState.currentStepIndex];
+      return currentStep.title.toLowerCase().contains('technicien en route');
+    }
+    return false;
   }
 
   @override
@@ -116,7 +127,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             child: IconButton(
               onPressed: () => context.pop(),
               icon: const Icon(
-                Icons.arrow_back_ios_new,
+                Icons.arrow_back,
                 color: AppColors.textPrimary,
                 size: 16,
               ),
@@ -162,10 +173,21 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                 ),
                               ),
                               OutlinedButton(
-                                onPressed: () {},
+                                onPressed:
+                                    _isTechnicianOnRoute(workflowState)
+                                        ? () {
+                                          context.push(
+                                            '/technician-location',
+                                            extra: widget.order.reference,
+                                          );
+                                        }
+                                        : null,
                                 style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(
-                                    color: AppColors.textHint,
+                                  side: BorderSide(
+                                    color:
+                                        _isTechnicianOnRoute(workflowState)
+                                            ? AppColors.primary
+                                            : AppColors.textHint,
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -175,10 +197,13 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                     vertical: 8,
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'Voir technicien',
                                   style: TextStyle(
-                                    color: AppColors.textPrimary,
+                                    color:
+                                        _isTechnicianOnRoute(workflowState)
+                                            ? AppColors.primary
+                                            : AppColors.textHint,
                                     fontSize: 13,
                                   ),
                                 ),

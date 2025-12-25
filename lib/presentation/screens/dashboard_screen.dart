@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/router/app_router.dart';
-import '../../core/theme/app_colors.dart';
 import '../../domain/entities/order_entity.dart';
 import '../viewmodels/orders_viewmodel.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/box_status_cards.dart';
 import '../widgets/orders_section.dart';
+import '../widgets/connection_test_bottom_sheet.dart';
+import '../widgets/connection_test_result_bottom_sheet.dart';
+import '../widgets/action_buttons.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -25,32 +27,59 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     'Ligne mobile 2',
   ];
 
-  late List<BoxStatusData> _boxStatusData;
-
   @override
   void initState() {
     super.initState();
-    _boxStatusData = const [
-      BoxStatusData(
-        label: 'Box',
-        value: '---',
-        iconPath: 'assets/Icones/home/box.svg',
-      ),
-      BoxStatusData(
-        label: 'Internet',
-        value: '---',
-        iconPath: 'assets/Icones/home/Wifi.svg',
-      ),
-      BoxStatusData(
-        label: 'Dernier test',
-        value: '---',
-        iconPath: 'assets/Icones/home/Test.svg',
-      ),
-    ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(ordersProvider.notifier).loadOrders();
     });
+  }
+
+  List<BoxStatusData> _getBoxStatusData(bool isFibreCompleted) {
+    if (isFibreCompleted) {
+      return const [
+        BoxStatusData(
+          label: 'Box',
+          value: 'En ligne',
+          iconPath: 'assets/Icones/home/box.svg',
+          showStatusDot: true,
+          statusDotColor: Colors.green,
+        ),
+        BoxStatusData(
+          label: 'Internet',
+          value: 'Connecté',
+          iconPath: 'assets/Icones/home/Wifi.svg',
+          showStatusDot: true,
+          statusDotColor: Colors.green,
+        ),
+        BoxStatusData(
+          label: 'Dernier test',
+          value: 'Réussi',
+          iconPath: 'assets/Icones/home/Test.svg',
+          showStatusDot: true,
+          statusDotColor: Colors.green,
+        ),
+      ];
+    } else {
+      return const [
+        BoxStatusData(
+          label: 'Box',
+          value: '---',
+          iconPath: 'assets/Icones/home/box.svg',
+        ),
+        BoxStatusData(
+          label: 'Internet',
+          value: '---',
+          iconPath: 'assets/Icones/home/Wifi.svg',
+        ),
+        BoxStatusData(
+          label: 'Dernier test',
+          value: '---',
+          iconPath: 'assets/Icones/home/Test.svg',
+        ),
+      ];
+    }
   }
 
   void _navigateToOrderDetails(OrderEntity order) {
@@ -67,66 +96,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   void _testConnection() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Test de connexion en cours...'),
-        behavior: SnackBarBehavior.floating,
-      ),
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => ConnectionTestBottomSheet(
+            onTestComplete: (isSuccess) {
+              Future.delayed(const Duration(milliseconds: 300), () {
+                if (mounted) {
+                  _showTestResult(isSuccess);
+                }
+              });
+            },
+          ),
     );
   }
 
-  Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: _navigateToClaim,
-            icon: const Icon(
-              Icons.edit_note,
-              size: 20,
-              color: AppColors.primary,
-            ),
-            label: const Text(
-              'Faire une réclamation',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.primary, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            ),
+  void _showTestResult(bool isSuccess) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => ConnectionTestResultBottomSheet(
+            isSuccess: isSuccess,
+            onRetry: _testConnection,
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _testConnection,
-            icon: const Icon(Icons.wifi_find, size: 20, color: Colors.white),
-            label: const Text(
-              'Tester ma connexion',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              elevation: 0,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -134,46 +130,54 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     final ordersState = ref.watch(ordersProvider);
 
+    final hasFibreOrderCompleted = ordersState.orders.any(
+      (order) =>
+          order.type == OrderType.fibre &&
+          order.status == OrderStatus.completed,
+    );
+
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DashboardHeader(
-                  userName: 'Eddy',
-                  lines: _lines,
-                  selectedLine: _selectedLine,
-                  onLineChanged: (newLine) {
-                    setState(() {
-                      _selectedLine = newLine;
-                    });
-                  },
-                  boxStatusCards: _boxStatusData,
-                  onCardTap: (index) {
-                    debugPrint('Card tapped: $index');
-                  },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DashboardHeader(
+                userName: 'Eddy',
+                lines: _lines,
+                selectedLine: _selectedLine,
+                onLineChanged: (newLine) {
+                  setState(() {
+                    _selectedLine = newLine;
+                  });
+                },
+                boxStatusCards: _getBoxStatusData(hasFibreOrderCompleted),
+                onCardTap: (index) {
+                  debugPrint('Card tapped: $index');
+                },
+              ),
+              const SizedBox(height: 24),
+
+              if (hasFibreOrderCompleted) ...[
+                ActionButtons(
+                  onClaimPressed: _navigateToClaim,
+                  onTestConnectionPressed: _testConnection,
                 ),
                 const SizedBox(height: 24),
-
-                // Boutons Actions (Réclamation + Test connexion)
-                _buildActionButtons(),
-                const SizedBox(height: 24),
-
-                if (ordersState.isLoading)
-                  const Center(child: CircularProgressIndicator())
-                else if (ordersState.errorMessage != null)
-                  Center(child: Text(ordersState.errorMessage!))
-                else
-                  OrdersSection(
-                    orders: ordersState.orders,
-                    onViewDetails: _navigateToOrderDetails,
-                  ),
               ],
-            ),
+
+              if (ordersState.isLoading)
+                const Center(child: CircularProgressIndicator())
+              else if (ordersState.errorMessage != null)
+                Center(child: Text(ordersState.errorMessage!))
+              else
+                OrdersSection(
+                  orders: ordersState.orders,
+                  onViewDetails: _navigateToOrderDetails,
+                ),
+            ],
           ),
         ),
       ),

@@ -10,7 +10,9 @@ import '../../presentation/screens/otp_verification_screen.dart';
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/order_details_screen.dart';
 import '../../presentation/screens/claim_screen.dart';
+import '../../presentation/screens/claims_history_screen.dart';
 import '../../presentation/screens/notification_detail_screen.dart';
+import '../../presentation/screens/technician_location_screen.dart';
 import '../../presentation/viewmodels/auth_viewmodel.dart';
 
 class AppRouter {
@@ -23,7 +25,9 @@ class AppRouter {
   static const String settings = '/settings';
   static const String orderDetails = '/order-details';
   static const String claim = '/claim';
+  static const String claimsHistory = '/claims-history';
   static const String notificationDetail = '/notification-detail';
+  static const String technicianLocation = '/technician-location';
 
   static GoRouter router(Ref ref) {
     return GoRouter(
@@ -106,11 +110,24 @@ class AppRouter {
           },
         ),
         GoRoute(
+          path: claimsHistory,
+          name: 'claims-history',
+          builder: (context, state) => const ClaimsHistoryScreen(),
+        ),
+        GoRoute(
           path: notificationDetail,
           name: 'notification-detail',
           builder: (context, state) {
             final notification = state.extra as NotificationEntity;
             return NotificationDetailScreen(notification: notification);
+          },
+        ),
+        GoRoute(
+          path: technicianLocation,
+          name: 'technician-location',
+          builder: (context, state) {
+            final orderReference = state.extra as String;
+            return TechnicianLocationScreen(orderReference: orderReference);
           },
         ),
       ],

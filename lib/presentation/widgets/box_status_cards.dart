@@ -11,11 +11,17 @@ class BoxStatusData {
 
   final Color? iconColor;
 
+  final bool showStatusDot;
+
+  final Color? statusDotColor;
+
   const BoxStatusData({
     required this.label,
     required this.value,
     required this.iconPath,
     this.iconColor,
+    this.showStatusDot = false,
+    this.statusDotColor,
   });
 }
 
@@ -83,7 +89,7 @@ class _StatusCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
         decoration: BoxDecoration(
           color: const Color(0xFF1A1A1A),
           borderRadius: BorderRadius.circular(12),
@@ -110,14 +116,43 @@ class _StatusCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
 
-            Text(
-              data.value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (data.showStatusDot) ...[
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: data.statusDotColor ?? const Color(0xFF4CAF50),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: (data.statusDotColor ??
+                                  const Color(0xFF4CAF50))
+                              .withOpacity(0.5),
+                          blurRadius: 4,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                ],
+                Flexible(
+                  child: Text(
+                    data.value,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

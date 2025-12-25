@@ -47,6 +47,9 @@ dependencies:
 
     flutter_local_notifications: ^18.0.1
 
+    google_maps_flutter: ^2.10.0
+
+
 dev_dependencies:
     flutter_test:
         sdk: flutter
@@ -91,6 +94,7 @@ flutter:
 
     # Assets
     assets:
+        - .env
         - assets/images/
         - assets/Icones/
         - assets/Icones/home/
@@ -99,7 +103,6 @@ flutter:
         - assets/Icones/navbar/
         - assets/Icones/technicien/
         - assets/Icones/Profil/
-        - assets/Icones/Icone/
 
     # To add assets to your application, add an assets section, like this:
     # assets:

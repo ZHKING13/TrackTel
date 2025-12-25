@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tracktel/core/theme/app_colors.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../viewmodels/notifications_viewmodel.dart';
 
@@ -44,20 +45,32 @@ class _NotificationDetailScreenState
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade300),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(40),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.arrow_back_ios_new,
-              size: 14,
-              color: Colors.black87,
+            child: IconButton(
+              onPressed: () => context.pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: AppColors.textPrimary,
+                size: 16,
+              ),
+              padding: EdgeInsets.zero,
             ),
           ),
-          onPressed: () => context.pop(),
         ),
         title: Row(
           children: [

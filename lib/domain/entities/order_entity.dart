@@ -25,7 +25,6 @@ class OrderEntity {
     this.updatedAt,
   });
 
-  /// Label lisible pour le type
   String get typeLabel {
     switch (type) {
       case OrderType.fibre:
@@ -39,7 +38,6 @@ class OrderEntity {
     }
   }
 
-  /// Label lisible pour le statut
   String get statusLabel {
     switch (status) {
       case OrderStatus.pending:
@@ -53,11 +51,10 @@ class OrderEntity {
     }
   }
 
-  /// Chemin de l'icône selon le type
   String get iconPath {
     switch (type) {
       case OrderType.fibre:
-        return 'assets/Icones/home/fibre.svg';
+        return 'assets/Icones/notification/Fibre.svg';
       case OrderType.sim:
         return 'assets/Icones/home/sim.svg';
       case OrderType.box:

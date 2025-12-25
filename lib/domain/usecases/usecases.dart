@@ -1,5 +1,3 @@
-export 'get_users_usecase.dart';
-export 'get_user_by_id_usecase.dart';
 export 'get_orders_usecase.dart';
 export 'get_order_by_reference_usecase.dart';
 export 'update_order_progress_usecase.dart';

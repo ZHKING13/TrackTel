@@ -1,4 +1,3 @@
-export 'home_screen.dart';
 export 'settings_screen.dart';
 export 'login_phone_screen.dart';
 export 'otp_verification_screen.dart';
@@ -10,3 +9,5 @@ export 'profile_screen.dart';
 export 'splash_screen.dart';
 export 'order_details_screen.dart';
 export 'claim_screen.dart';
+export 'claims_history_screen.dart';
+export 'technician_location_screen.dart';
