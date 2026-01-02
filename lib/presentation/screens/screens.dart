@@ -1,4 +1,3 @@
-export 'settings_screen.dart';
 export 'login_phone_screen.dart';
 export 'otp_verification_screen.dart';
 export 'app_shell.dart';

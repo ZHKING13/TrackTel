@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/router/app_router.dart';
 import '../../domain/entities/order_entity.dart';
 import '../viewmodels/orders_viewmodel.dart';
+import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/box_status_cards.dart';
 import '../widgets/orders_section.dart';
@@ -33,6 +34,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(ordersProvider.notifier).loadOrders();
+
+      // Afficher la notification de bienvenue si l'utilisateur vient de se connecter
+      final authState = ref.read(authProvider);
+      if (authState.justLoggedIn == true) {
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            content: const Text(
+              'Connexion réussie. Bienvenue dans TrackTel.',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.green,
+            actions: [
+              SizedBox.shrink(), 
+            ],
+          ),
+        );
+        Future.delayed(const Duration(seconds: 2), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+        
+        ref.read(authProvider.notifier).resetJustLoggedIn();
+      }
     });
   }
 

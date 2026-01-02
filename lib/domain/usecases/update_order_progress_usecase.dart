@@ -1,7 +1,6 @@
 import '../../data/repositories/order_repository.dart';
 import '../entities/order_entity.dart';
 
-/// Use case pour mettre à jour la progression d'une commande
 class UpdateOrderProgressUseCase {
   final OrderRepository _repository;
 

@@ -93,14 +93,10 @@ class _OrderIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 44,
-      height: 44,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.background, width: 1),
-      ),
+      width: 40,
+      height: 40,
+      padding: const EdgeInsets.all(1),
+    
       child: SvgPicture.asset(order.iconPath),
     );
   }

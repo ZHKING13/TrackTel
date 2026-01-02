@@ -157,7 +157,7 @@ class _ConnectionTestBottomSheetState extends State<ConnectionTestBottomSheet>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppColors.primary.withOpacity(currentOpacity * 0.5),
+                color: AppColors.backgroundDark.withOpacity(currentOpacity * 0.5),
                 width: 2,
                 style: BorderStyle.solid,
               ),

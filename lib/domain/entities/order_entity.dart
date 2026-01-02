@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-/// Types de commande disponibles
 enum OrderType { fibre, sim, box, intervention }
 
-/// Statuts possibles d'une commande
 enum OrderStatus { pending, inProgress, completed, cancelled }
 
-/// Entité Order pour la couche domaine
 @immutable
 class OrderEntity {
   final String reference;
@@ -54,7 +51,7 @@ class OrderEntity {
   String get iconPath {
     switch (type) {
       case OrderType.fibre:
-        return 'assets/Icones/notification/Fibre.svg';
+        return 'assets/Icones/home/fibre.svg';
       case OrderType.sim:
         return 'assets/Icones/home/sim.svg';
       case OrderType.box:
@@ -64,7 +61,6 @@ class OrderEntity {
     }
   }
 
-  /// Nombre total d'étapes selon le type
   int get totalSteps {
     switch (type) {
       case OrderType.fibre:
@@ -77,7 +73,6 @@ class OrderEntity {
     }
   }
 
-  /// Crée une copie avec les champs modifiés
   OrderEntity copyWith({
     String? reference,
     OrderType? type,

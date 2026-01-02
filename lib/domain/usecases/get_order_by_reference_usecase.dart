@@ -1,7 +1,6 @@
 import '../../data/repositories/order_repository.dart';
 import '../entities/order_entity.dart';
 
-/// Use case pour récupérer une commande par sa référence
 class GetOrderByReferenceUseCase {
   final OrderRepository _repository;
 

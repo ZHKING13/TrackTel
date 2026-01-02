@@ -6,7 +6,6 @@ import '../../domain/usecases/get_orders_usecase.dart';
 import '../../domain/usecases/get_order_by_reference_usecase.dart';
 import '../../domain/usecases/update_order_progress_usecase.dart';
 
-/// État des commandes
 class OrdersState {
   final List<OrderEntity> orders;
   final bool isLoading;
@@ -31,7 +30,6 @@ class OrdersState {
   }
 }
 
-/// ViewModel pour gérer les commandes
 class OrdersNotifier extends StateNotifier<OrdersState> {
   final GetOrdersUseCase _getOrdersUseCase;
   final GetOrderByReferenceUseCase _getOrderByReferenceUseCase;
@@ -46,7 +44,6 @@ class OrdersNotifier extends StateNotifier<OrdersState> {
        _updateOrderProgressUseCase = updateOrderProgressUseCase,
        super(const OrdersState());
 
-  /// Charge toutes les commandes
   Future<void> loadOrders() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
@@ -61,7 +58,6 @@ class OrdersNotifier extends StateNotifier<OrdersState> {
     }
   }
 
-  /// Récupère une commande par sa référence
   Future<OrderEntity?> getOrderByReference(String reference) async {
     try {
       return await _getOrderByReferenceUseCase(reference);
@@ -73,7 +69,6 @@ class OrdersNotifier extends StateNotifier<OrdersState> {
     }
   }
 
-  /// Met à jour la progression d'une commande
   Future<void> updateOrderProgress({
     required String reference,
     required int progress,
@@ -87,7 +82,6 @@ class OrdersNotifier extends StateNotifier<OrdersState> {
       );
 
       if (updatedOrder != null) {
-        // Mettre à jour la liste locale des commandes
         final updatedOrders =
             state.orders.map((order) {
               if (order.reference == reference) {
@@ -105,7 +99,6 @@ class OrdersNotifier extends StateNotifier<OrdersState> {
     }
   }
 
-  /// Récupère les commandes actives
   List<OrderEntity> get activeOrders {
     return state.orders
         .where(
@@ -116,26 +109,21 @@ class OrdersNotifier extends StateNotifier<OrdersState> {
         .toList();
   }
 
-  /// Efface le message d'erreur
   void clearError() {
     state = state.copyWith(errorMessage: null);
   }
 }
 
-// ========== PROVIDERS ==========
 
-/// Provider pour le repository Order
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
   return OrderRepositoryImpl();
 });
 
-/// Provider pour le use case GetOrders
 final getOrdersUseCaseProvider = Provider<GetOrdersUseCase>((ref) {
   final repository = ref.watch(orderRepositoryProvider);
   return GetOrdersUseCase(repository);
 });
 
-/// Provider pour le use case GetOrderByReference
 final getOrderByReferenceUseCaseProvider = Provider<GetOrderByReferenceUseCase>(
   (ref) {
     final repository = ref.watch(orderRepositoryProvider);
@@ -143,7 +131,6 @@ final getOrderByReferenceUseCaseProvider = Provider<GetOrderByReferenceUseCase>(
   },
 );
 
-/// Provider pour le use case UpdateOrderProgress
 final updateOrderProgressUseCaseProvider = Provider<UpdateOrderProgressUseCase>(
   (ref) {
     final repository = ref.watch(orderRepositoryProvider);
@@ -151,7 +138,6 @@ final updateOrderProgressUseCaseProvider = Provider<UpdateOrderProgressUseCase>(
   },
 );
 
-/// Provider pour le ViewModel Orders
 final ordersProvider = StateNotifierProvider<OrdersNotifier, OrdersState>((
   ref,
 ) {

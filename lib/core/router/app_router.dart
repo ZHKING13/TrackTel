@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../../presentation/screens/app_shell.dart';
-import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/login_phone_screen.dart';
 import '../../presentation/screens/otp_verification_screen.dart';
 import '../../presentation/screens/splash_screen.dart';
@@ -88,11 +87,7 @@ class AppRouter {
           name: 'home',
           builder: (context, state) => const AppShell(),
         ),
-        GoRoute(
-          path: settings,
-          name: 'settings',
-          builder: (context, state) => const SettingsScreen(),
-        ),
+       
         GoRoute(
           path: orderDetails,
           name: 'order-details',

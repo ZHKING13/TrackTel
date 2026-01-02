@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../core/theme/app_colors.dart';
 
 class ActionButtons extends StatelessWidget {
@@ -18,25 +19,27 @@ class ActionButtons extends StatelessWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: onClaimPressed,
-            icon: const Icon(
-              Icons.edit_note,
-              size: 20,
-              color: AppColors.primary,
-            ),
+            icon:  Container(
+      width: 24,
+      height: 24,
+      padding: const EdgeInsets.all(1),
+    
+      child: SvgPicture.asset("assets/Icones/home/support.svg"),
+    ),
             label: const Text(
               'Faire une réclamation',
               style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 11,
+                color: AppColors.textSecondary,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.primary, width: 1.5),
+              side: const BorderSide(color: AppColors.textSecondary, width: 1.5),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(4),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
             ),
           ),
         ),
@@ -44,21 +47,26 @@ class ActionButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: onTestConnectionPressed,
-            icon: const Icon(Icons.wifi_find, size: 20, color: Colors.white),
+            icon:  SizedBox(
+              width: 24,
+              height: 24,
+
+              child: SvgPicture.asset("assets/Icones/technicien/test.svg"),
+            ),
             label: const Text(
               'Tester ma connexion',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(4),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
               elevation: 0,
             ),
           ),

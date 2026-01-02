@@ -35,32 +35,17 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
 
-            // Content
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    // Nom complet
                     _ProfileInfoCard(
-                      iconWidget: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.primary,
-                            width: 2,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          color: AppColors.primary,
-                          size: 22,
-                        ),
+                      iconWidget: _buildSvgIcon(
+                        'assets/Icones/Profil/avatar.svg',
                       ),
                       label: 'Nom complet',
-                      value: 'Eddy Sosthène',
+                      value: 'Serge Kotta',
                     ),
                     const SizedBox(height: 12),
 

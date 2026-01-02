@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-/// Statuts possibles d'une étape du workflow
 enum StepStatus { pending, inProgress, completed }
 
-/// Entité WorkflowStep pour la couche domaine
 @immutable
 class WorkflowStepEntity {
   final String id;
@@ -22,16 +20,12 @@ class WorkflowStepEntity {
     required this.order,
   });
 
-  /// Vérifie si l'étape est complétée
   bool get isCompleted => status == StepStatus.completed;
 
-  /// Vérifie si l'étape est en cours
   bool get isInProgress => status == StepStatus.inProgress;
 
-  /// Vérifie si l'étape est en attente
   bool get isPending => status == StepStatus.pending;
 
-  /// Crée une copie avec les champs modifiés
   WorkflowStepEntity copyWith({
     String? id,
     String? title,

@@ -22,13 +22,26 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(workflowProvider.notifier)
-          .initializeWorkflow(
-            orderType: widget.order.type,
-            progress: widget.order.progress,
-          );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(ordersProvider.notifier).loadOrders();
+      final order = await ref
+          .read(ordersProvider.notifier)
+          .getOrderByReference(widget.order.reference);
+      if (order != null) {
+        ref
+            .read(workflowProvider.notifier)
+            .initializeWorkflow(
+              orderType: order.type,
+              progress: order.progress,
+            );
+      } else {
+        ref
+            .read(workflowProvider.notifier)
+            .initializeWorkflow(
+              orderType: widget.order.type,
+              progress: widget.order.progress,
+            );
+      }
     });
   }
 
@@ -36,22 +49,27 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
     final workflowNotifier = ref.read(workflowProvider.notifier);
     final workflowStateBefore = ref.read(workflowProvider);
     final completedStepIndex = workflowStateBefore.currentStepIndex;
-    final completionTime = 'Aujourd\'hui ${TimeOfDay.now().format(context)}';
+    final now = DateTime.now();
+    final completionTime =
+        '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
 
     final completedStepTitle = await workflowNotifier.advanceToNextStep(
       completionTime,
     );
 
     final workflowState = ref.read(workflowProvider);
-
-    // Obtenir le titre du prochain step (pas celui qui vient d'être validé)
     final nextStepTitle = workflowState.currentStepTitle;
+
+    final totalSteps = workflowState.steps.length;
+    final completedSteps =
+        workflowState.steps.where((s) => s.isCompleted).length;
+    final progress = ((completedSteps / totalSteps) * 100).round();
 
     await ref
         .read(ordersProvider.notifier)
         .updateOrderProgress(
           reference: widget.order.reference,
-          progress: workflowState.progress,
+          progress: progress,
           status:
               workflowState.isCompleted
                   ? OrderStatus.completed
@@ -73,10 +91,11 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
     final notificationService = ref.read(notificationServiceProvider);
     final workflowState = ref.read(workflowProvider);
 
-    if (workflowState.isCompleted) {
-    } else {
+    if (!workflowState.isCompleted) {
+      final currentStep =
+          workflowState.currentStepTitle ?? nextStepTitle ?? completedStepTitle;
       notificationService.showNotification(
-        title: nextStepTitle ?? completedStepTitle,
+        title: 'Vous êtes à l\'étape : $currentStep',
         body: '',
       );
     }

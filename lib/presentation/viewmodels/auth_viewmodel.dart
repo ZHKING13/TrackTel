@@ -19,6 +19,7 @@ class AuthState {
   final bool isOtpVerified;
   final bool isLoggedIn;
   final bool isCheckingSession;
+  final bool justLoggedIn;
 
   const AuthState({
     this.phoneNumber = '',
@@ -28,6 +29,7 @@ class AuthState {
     this.isOtpVerified = false,
     this.isLoggedIn = false,
     this.isCheckingSession = true,
+    this.justLoggedIn = false,
   });
 
   AuthState copyWith({
@@ -38,6 +40,7 @@ class AuthState {
     bool? isOtpVerified,
     bool? isLoggedIn,
     bool? isCheckingSession,
+    bool? justLoggedIn,
   }) {
     return AuthState(
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -47,11 +50,16 @@ class AuthState {
       isOtpVerified: isOtpVerified ?? this.isOtpVerified,
       isLoggedIn: isLoggedIn ?? this.isLoggedIn,
       isCheckingSession: isCheckingSession ?? this.isCheckingSession,
+      justLoggedIn: justLoggedIn ?? this.justLoggedIn,
     );
   }
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
+  void resetJustLoggedIn() {
+    state = state.copyWith(justLoggedIn: false);
+  }
+
   final SendOtpNotificationUseCase _sendOtpNotificationUseCase;
 
   AuthNotifier(this._sendOtpNotificationUseCase) : super(const AuthState()) {
@@ -144,6 +152,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isOtpVerified: true,
         isLoggedIn: true,
         error: null,
+        justLoggedIn: true,
       );
 
       await _saveSession();
@@ -151,6 +160,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } else {
       state = state.copyWith(error: 'Code OTP incorrect');
       return false;
+    }
+    void resetJustLoggedIn() {
+      state = state.copyWith(justLoggedIn: false);
     }
   }
 

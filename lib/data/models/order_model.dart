@@ -1,4 +1,3 @@
-/// Order type enum
 enum OrderType { fibre, sim, box, intervention }
 
 enum OrderStatus { pending, inProgress, completed, cancelled }
@@ -54,9 +53,9 @@ class OrderModel {
   String get iconPath {
     switch (type) {
       case OrderType.fibre:
-        return 'assets/Icones/home/fibre.svg';
+        return 'assets/Icones/home/Fibre.svg';
       case OrderType.sim:
-        return 'assets/Icones/home/sim.svg';
+        return 'assets/Icones/home/Sim.svg';
       case OrderType.box:
         return 'assets/Icones/home/box.svg';
       case OrderType.intervention:

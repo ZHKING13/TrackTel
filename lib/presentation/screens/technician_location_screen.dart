@@ -393,11 +393,7 @@ class _TechnicianLocationScreenState extends State<TechnicianLocationScreen> {
                         color: Colors.black87,
                       ),
                       onPressed: () {
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        } else {
-                          context.go('/');
-                        }
+                        context.pop();
                       },
                     ),
                   ),
